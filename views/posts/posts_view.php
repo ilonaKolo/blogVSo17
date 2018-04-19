@@ -3,7 +3,6 @@
         <div class="media">
             <div class="media-body">
                 <h4 class="media-heading"><?php echo $post ['post_subject'];?></h4>
-                <p class="text-right"><?php echo $post['post_text'];?></p>
                 <p><?php echo $post['post_text'];?></p>
                 <ul class="list-inline list-unstyled">
                     <li><span><i class="glyphicon glyphicon-calendar"></i><?php echo $post['post_created'];?></span></li>
