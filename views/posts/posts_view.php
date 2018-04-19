@@ -6,7 +6,7 @@
                 <p class="text-right"><?php echo $post['post_text'];?></p>
                 <p><?php echo $post['post_text'];?></p>
                 <ul class="list-inline list-unstyled">
-                    <li><span><i class="glyphicon glyphicon-calendar"></i><?=php echo $post['post_created'];?></span></li>
+                    <li><span><i class="glyphicon glyphicon-calendar"></i><?php echo $post['post_created'];?></span></li>
                     <li></li>
                     <span><i class="glyphicon glyphicon-comment"></i> ? comments</span>
                 </ul>
