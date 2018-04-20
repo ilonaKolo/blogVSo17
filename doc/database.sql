@@ -3,15 +3,20 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 19, 2018 at 01:33 PM
+-- Generation Time: Apr 20, 2018 at 08:24 PM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.2.0
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `blog`
@@ -23,7 +28,6 @@ SET time_zone = "+00:00";
 -- Table structure for table `posts`
 --
 
-DROP TABLE IF EXISTS `posts`;
 CREATE TABLE `posts` (
   `post_id` int(10) UNSIGNED NOT NULL,
   `post_subject` varchar(255) NOT NULL,
@@ -37,8 +41,46 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`post_id`, `post_subject`, `post_text`, `post_created`, `user_id`) VALUES
-  (1, 'esimene', 'xfgxmfgjxfgkxfgkjxfgx', '2018-04-19 11:17:29', 1),
-  (2, 'teine', 'gmcfgmhcgh,cgh,cgh', '2018-04-19 11:17:29', 1);
+  (1, 'First Post', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce aliquet finibus libero ut volutpat. Proin erat tortor, pretium ac vestibulum ultrices, sagittis vitae libero. Sed a congue tortor, rhoncus convallis neque. Mauris quis mi tincidunt, consequat purus vel, consequat nisi. Suspendisse potenti. Proin sit amet ipsum volutpat sem porta fermentum eget ut nulla. Sed hendrerit tristique nisi, suscipit euismod nunc feugiat a. Suspendisse sed laoreet quam. Curabitur mollis sed sapien ac elementum. Integer tincidunt est eu sapien pretium, sit amet mollis tortor elementum.', '2018-04-19 11:17:29', 1),
+  (2, 'Second Post', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce aliquet finibus libero ut volutpat. Proin erat tortor, pretium ac vestibulum ultrices, sagittis vitae libero. Sed a congue tortor, rhoncus convallis neque. Mauris quis mi tincidunt, consequat purus vel, consequat nisi. Suspendisse potenti. Proin sit amet ipsum volutpat sem porta fermentum eget ut nulla. Sed hendrerit tristique nisi, suscipit euismod nunc feugiat a. Suspendisse sed laoreet quam. Curabitur mollis sed sapien ac elementum. Integer tincidunt est eu sapien pretium, sit amet mollis tortor elementum.', '2018-04-19 11:17:29', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `post_tags`
+--
+
+CREATE TABLE `post_tags` (
+  `post_id` int(11) UNSIGNED NOT NULL,
+  `tag_id` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `post_tags`
+--
+
+INSERT INTO `post_tags` (`post_id`, `tag_id`) VALUES
+  (1, 0),
+  (1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tag_id`
+--
+
+CREATE TABLE `tag_id` (
+  `tag_id` int(10) UNSIGNED NOT NULL,
+  `tag_name` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tag_id`
+--
+
+INSERT INTO `tag_id` (`tag_id`, `tag_name`) VALUES
+  (1, 'tag1'),
+  (2, 'tag2');
 
 -- --------------------------------------------------------
 
@@ -46,7 +88,6 @@ INSERT INTO `posts` (`post_id`, `post_subject`, `post_text`, `post_created`, `us
 -- Table structure for table `translations`
 --
 
-DROP TABLE IF EXISTS `translations`;
 CREATE TABLE `translations` (
   `translation_id` int(10) UNSIGNED NOT NULL,
   `phrase` varchar(191) NOT NULL,
@@ -94,7 +135,6 @@ INSERT INTO `translations` (`translation_id`, `phrase`, `language`, `translation
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `user_id` int(10) UNSIGNED NOT NULL,
   `is_admin` tinyint(4) NOT NULL DEFAULT '0',
@@ -123,6 +163,19 @@ ALTER TABLE `posts`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `post_tags`
+--
+ALTER TABLE `post_tags`
+  ADD PRIMARY KEY (`post_id`,`tag_id`) USING BTREE,
+  ADD UNIQUE KEY `tag_id` (`tag_id`);
+
+--
+-- Indexes for table `tag_id`
+--
+ALTER TABLE `tag_id`
+  ADD PRIMARY KEY (`tag_id`);
+
+--
 -- Indexes for table `translations`
 --
 ALTER TABLE `translations`
@@ -146,6 +199,12 @@ ALTER TABLE `posts`
   MODIFY `post_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `tag_id`
+--
+ALTER TABLE `tag_id`
+  MODIFY `tag_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `translations`
 --
 ALTER TABLE `translations`
@@ -166,5 +225,14 @@ ALTER TABLE `users`
 --
 ALTER TABLE `posts`
   ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
-SET FOREIGN_KEY_CHECKS=1;
+
+--
+-- Constraints for table `post_tags`
+--
+ALTER TABLE `post_tags`
+  ADD CONSTRAINT `post_tags_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `tag_id` (`tag_id`);
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
