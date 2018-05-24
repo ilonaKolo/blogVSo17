@@ -13,3 +13,18 @@
         </div>
     </div>
 </div>
+
+<div class="container">
+    <div class="row">
+        <div class="media comment-box">
+            <div class="media-body">
+                    <h4 class="media-heading"><?php echo $comment ['comment_subject'];?></h4>
+                    <p><?php echo $comment['comment_text'];?></p>
+                    <span class="badge badge-success">Commented on: <?php echo $comment['comment_created'];?></span> <span class="badge badge-success">Author: <?php echo $comment['comment_author'];?></span>
+
+                    <hr>
+
+            </div>
+        </div>
+    </div>
+</div>
