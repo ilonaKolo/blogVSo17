@@ -3,7 +3,7 @@ class tags extends Controller
 {
     function index()
     {
-        $this->tags = get_all("SELECT *, COUNT(post_id) AS count FROM post_tags NATURAL JOIN tag_id GROUP BY tag_id");
+        $this->tags = get_all("SELECT * FROM tag");
     }
     function view()
     {

@@ -3,24 +3,21 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2018 at 08:24 PM
+-- Generation Time: May 24, 2018 at 10:19 AM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.2.0
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
 --
 -- Database: `blog`
 --
+CREATE DATABASE IF NOT EXISTS `blog` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `blog`;
 
 -- --------------------------------------------------------
 
@@ -28,13 +25,16 @@ SET time_zone = "+00:00";
 -- Table structure for table `posts`
 --
 
-CREATE TABLE `posts` (
-  `post_id` int(10) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `posts`;
+CREATE TABLE IF NOT EXISTS `posts` (
+  `post_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `post_subject` varchar(255) NOT NULL,
   `post_text` text NOT NULL,
   `post_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `user_id` int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`post_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `posts`
@@ -50,9 +50,12 @@ INSERT INTO `posts` (`post_id`, `post_subject`, `post_text`, `post_created`, `us
 -- Table structure for table `post_tags`
 --
 
-CREATE TABLE `post_tags` (
+DROP TABLE IF EXISTS `post_tags`;
+CREATE TABLE IF NOT EXISTS `post_tags` (
   `post_id` int(11) UNSIGNED NOT NULL,
-  `tag_id` int(11) UNSIGNED NOT NULL
+  `tag_id` int(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`post_id`,`tag_id`) USING BTREE,
+  UNIQUE KEY `tag_id` (`tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -61,26 +64,30 @@ CREATE TABLE `post_tags` (
 
 INSERT INTO `post_tags` (`post_id`, `tag_id`) VALUES
   (1, 0),
-  (1, 1);
+  (1, 1),
+  (1, 3);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tag_id`
+-- Table structure for table `tag`
 --
 
-CREATE TABLE `tag_id` (
-  `tag_id` int(10) UNSIGNED NOT NULL,
-  `tag_name` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+DROP TABLE IF EXISTS `tag`;
+CREATE TABLE IF NOT EXISTS `tag` (
+  `tag_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tag_name` varchar(25) NOT NULL,
+  PRIMARY KEY (`tag_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `tag_id`
+-- Dumping data for table `tag`
 --
 
-INSERT INTO `tag_id` (`tag_id`, `tag_name`) VALUES
+INSERT INTO `tag` (`tag_id`, `tag_name`) VALUES
   (1, 'tag1'),
-  (2, 'tag2');
+  (2, 'tag2'),
+  (3, 'tag3');
 
 -- --------------------------------------------------------
 
@@ -88,14 +95,17 @@ INSERT INTO `tag_id` (`tag_id`, `tag_name`) VALUES
 -- Table structure for table `translations`
 --
 
-CREATE TABLE `translations` (
-  `translation_id` int(10) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `translations`;
+CREATE TABLE IF NOT EXISTS `translations` (
+  `translation_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `phrase` varchar(191) NOT NULL,
   `language` char(3) NOT NULL,
   `translation` varchar(191) DEFAULT NULL,
   `controller` varchar(15) NOT NULL,
-  `action` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `action` varchar(20) NOT NULL,
+  PRIMARY KEY (`translation_id`),
+  UNIQUE KEY `language_phrase_controller_action_index` (`language`,`phrase`,`controller`,`action`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `translations`
@@ -135,14 +145,16 @@ INSERT INTO `translations` (`translation_id`, `phrase`, `language`, `translation
 -- Table structure for table `users`
 --
 
-CREATE TABLE `users` (
-  `user_id` int(10) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `is_admin` tinyint(4) NOT NULL DEFAULT '0',
   `password` varchar(191) NOT NULL,
   `email` varchar(191) NOT NULL,
   `deleted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `name` varchar(191) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `name` varchar(191) NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
@@ -150,71 +162,6 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `is_admin`, `password`, `email`, `deleted`, `name`) VALUES
   (1, 1, '$2y$10$vTje.ndUFKHyuotY99iYkO.2aHJUgOsy2x0RMXP1UmrTe6CQsKbtm', 'demo@example.com', 0, 'Demo User');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `posts`
---
-ALTER TABLE `posts`
-  ADD PRIMARY KEY (`post_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `post_tags`
---
-ALTER TABLE `post_tags`
-  ADD PRIMARY KEY (`post_id`,`tag_id`) USING BTREE,
-  ADD UNIQUE KEY `tag_id` (`tag_id`);
-
---
--- Indexes for table `tag_id`
---
-ALTER TABLE `tag_id`
-  ADD PRIMARY KEY (`tag_id`);
-
---
--- Indexes for table `translations`
---
-ALTER TABLE `translations`
-  ADD PRIMARY KEY (`translation_id`),
-  ADD UNIQUE KEY `language_phrase_controller_action_index` (`language`,`phrase`,`controller`,`action`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `posts`
---
-ALTER TABLE `posts`
-  MODIFY `post_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `tag_id`
---
-ALTER TABLE `tag_id`
-  MODIFY `tag_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `translations`
---
-ALTER TABLE `translations`
-  MODIFY `translation_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
@@ -230,9 +177,6 @@ ALTER TABLE `posts`
 -- Constraints for table `post_tags`
 --
 ALTER TABLE `post_tags`
-  ADD CONSTRAINT `post_tags_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `tag_id` (`tag_id`);
+  ADD CONSTRAINT `post_tags_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `tag` (`tag_id`);
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
